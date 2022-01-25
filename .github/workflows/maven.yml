@@ -23,7 +23,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Build Docker Image
-      run: docker build --tag app:${{ github.ref }} .
+      run: docker build --tag vimbayinashe/first-image:${{ github.ref }} .
     - name: Push Docker Image
-      run: docker login -u ${{ github.DOCKER_NAME }} -p ${{ github.DOCKER_TOKEN }}; docker tag app:1.1 vimbayinashe/first-image:${{ github.ref }}
-      
+      run: docker login -u ${{ github.DOCKER_NAME }} -p ${{ github.DOCKER_TOKEN }}; docker push vimbayinashe/first-image:${{ github.ref }}
+     
