@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>AppServer</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -66,7 +66,19 @@
                     </archive>
                 </configuration>
             </plugin>
-            
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <to>
+                        <image>app</image>
+                    </to>
+                    <from>
+                        <image>openjdk:latest</image>
+                    </from>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
