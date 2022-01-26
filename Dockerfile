@@ -1,5 +1,10 @@
+# Multistage build (from a Docker image with Java & Maven)
+FROM maven:3.8.4-openjdk-17 as build
+COPY ./ /src
+RUN mvn -f /src/pom.xml clean package
+RUN jlink --module-path /src/target/app.jar --add-modules org.example.appserver --output /src/target/standalone
+
 FROM alpine:3.14.3
-#install glimpz -> required for alpine base image built image to run on Docker
 RUN apk add --no-cache tzdata --virtual .build-deps curl binutils zstd \
     && GLIBC_VER="2.31-r0" \
     && ALPINE_GLIBC_REPO="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" \
@@ -32,9 +37,5 @@ RUN apk add --no-cache tzdata --virtual .build-deps curl binutils zstd \
     && mv /tmp/libz/usr/lib/libz.so* /usr/glibc-compat/lib \
     && apk del --purge .build-deps glibc-i18n \
     && rm -rf /tmp/*.apk /tmp/gcc /tmp/gcc-libs.tar* /tmp/libz /tmp/libz.tar.xz /var/cache/apk/*
-COPY target/standalone /app
+COPY --from=build /src/target/standalone /app
 ENTRYPOINT ["/app/bin/java", "--module", "org.example.appserver/org.example.App"]
-#./standalone/bin/java --module
-
-##COPY target/app.jar /app/app.jar
-#ENTRYPOINT ["java", "-jar", "/app/app.jar"]
